@@ -47,6 +47,8 @@ public class Movement : MonoBehaviour
 
     void AddRotationForce(float rotateThisFrame)
     {
+        playerBody.freezeRotation = true; // Freezing rotation so we can manually rotate, counteracts bug when hitting obstacle
         transform.Rotate(Vector3.forward * rotateThisFrame * Time.deltaTime);
+        playerBody.freezeRotation = false; // Lets physics system take over
     }
 }
