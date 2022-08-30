@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    Rigidbody playerBody;
+    // Controls player movement speed
     [SerializeField] float thrustForceUp = 50f;
     [SerializeField] float rotationThrust = 50f;
+    // Allows you to assign an audio clip in the engine
+    [SerializeField] AudioClip mainEngine;
+
+    Rigidbody playerBody;
+    AudioSource rocketThrust;
 
 
     // Start is called before the first frame update
     void Start()
     {
         playerBody = GetComponent<Rigidbody>();
+        rocketThrust = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -25,20 +29,32 @@ public class Movement : MonoBehaviour
     void ProcessThrust() 
     {
         
-
+        // Thrust player forward when space is pressed
         if (Input.GetKey(KeyCode.Space))
         {
+            // Plays thruster audio if it is not playing
+            if (!rocketThrust.isPlaying)
+            {
+                rocketThrust.PlayOneShot(mainEngine);
+            }
+            // Adds force for thrust
             playerBody.AddRelativeForce(Vector3.up * thrustForceUp * Time.deltaTime);
+        }
+        else 
+        {
+            // Stops playing thruster audio when space bar isnt pressed
+            rocketThrust.Stop();
         }
     }
 
     void ProcessRotation()
     {
+        // Rotates player left
         if (Input.GetKey(KeyCode.A))
         {
             AddRotationForce(rotationThrust);
         }
-
+        // Rotates player right
         else if (Input.GetKey(KeyCode.D))
         {
             AddRotationForce(-rotationThrust);
